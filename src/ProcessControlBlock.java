@@ -21,6 +21,7 @@ public class ProcessControlBlock {
 
     }
 
+
     public ProcessState getState() {
         return this.state;
     }

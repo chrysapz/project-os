@@ -9,6 +9,7 @@ public class SJF extends Scheduler {
         /* TODO: you need to add some code here */
     }
 
+
     public Process getNextProcess() {
         /* TODO: you need to add some code here
          * and change the return value */

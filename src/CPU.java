@@ -26,4 +26,5 @@ public class CPU {
          * Hint: this method should run once for every CPU cycle */
 
     }
+
 }
