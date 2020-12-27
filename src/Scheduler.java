@@ -4,9 +4,7 @@ public abstract class Scheduler {
 
     protected ArrayList<Process> processes; // the list of processes to be executed
 
-    public Scheduler() {
-        this.processes = new ArrayList<Process>();
-    }
+    public Scheduler() { this.processes = new ArrayList<Process>(); }
 
 
     /* the addProcess() method should add a new process to the list of
@@ -19,6 +17,8 @@ public abstract class Scheduler {
      * schedulers. */
     public void removeProcess(Process p) {
         /* TODO: you need to add some code here */
+
+        processes.remove(p);
 
     }
 
