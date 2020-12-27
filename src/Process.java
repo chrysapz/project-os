@@ -1,6 +1,15 @@
 
 public class Process {
     private ProcessControlBlock pcb;
+
+    public int getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public int getBurstTime() {
+        return burstTime;
+    }
+
     private int arrivalTime;
     private int burstTime;
     private int memoryRequirements;
@@ -44,7 +53,7 @@ public class Process {
     public double getTurnAroundTime() {
         /* TODO: you need to add some code here
          * and change the return value */
-        return 0;
+        return this.getWaitingTime() + burstTime;
     }
 }
 

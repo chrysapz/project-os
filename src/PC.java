@@ -2,7 +2,6 @@ public class PC {
 
     public static void main(String[] args) {
         /* TODO: You may change this method to perform any tests you like */
-        System.out.println("hello");
         final Process[] processes = {
                 // Process parameters are: arrivalTime, burstTime, memoryRequirements (kB)
                 new Process(0, 5, 10),
