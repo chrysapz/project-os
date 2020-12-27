@@ -21,7 +21,6 @@ public class CPU {
         do {
             tick();
         }while (processes != null);
-
     }
 
     public void tick() {

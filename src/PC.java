@@ -15,6 +15,7 @@ public class PC {
         Scheduler scheduler = new FCFS();
         CPU cpu = new CPU(scheduler, mmu, processes);
         cpu.run();
+
     }
 
 

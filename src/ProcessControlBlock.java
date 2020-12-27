@@ -17,6 +17,7 @@ public class ProcessControlBlock {
         this.stopTimes = new ArrayList<Integer>();
         /* TODO: you need to add some code here
          * Hint: every process should get a unique PID */  //maybe some hashing? some hash key
+
         //creating a hash key with method hashCode and multiplying it with a prime number to add uniqueness
         this.pid = this.hashCode()*31; // change this line
 

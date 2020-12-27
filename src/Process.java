@@ -2,6 +2,7 @@
 public class Process {
     private ProcessControlBlock pcb;
 
+
     public int getArrivalTime() {
         return arrivalTime;
     }
