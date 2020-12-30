@@ -8,21 +8,23 @@ public class SJF extends Scheduler {
     public void addProcess(Process p) {
         /* TODO: you need to add some code here */
         processes.add(p);
-        QuickSort(0,processes.size()-1);
+        QuickSort(0,processes.size()-1);        //Sorting the processes based on burst time in decreasing order
     }
 
 
     public Process getNextProcess() {
         /* TODO: you need to add some code here
          * and change the return value */
-        if(processes.size()>0)
+        if(processes.size()>0)                  //If at least one process has arrived and is in READY state
         {
-            processes.remove(0);
-            return processes.get(0);
+            Process nextProcess=processes.get(0);       //Keep the process which is next in line to be dispatched
+            processes.remove(0);        //Remove the process from the queue of READY processes
+            return nextProcess;             //Return the process with the shortest burst time
         }
-        return null;
+        return null;            //If no processes have arrived
     }
 
+    //QuickSort algorithm that sorts the processes based on burst time in decreasing order
     protected void QuickSort(int low, int high){
         int temp;
         if(low<high)
