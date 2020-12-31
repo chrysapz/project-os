@@ -12,7 +12,7 @@ public class PC {
         final int[] availableBlockSizes = {15, 40, 10, 20}; // sizes in kB
         MemoryAllocationAlgorithm algorithm = new BestFit(availableBlockSizes);
         MMU mmu = new MMU(availableBlockSizes, algorithm);
-        Scheduler scheduler = new FCFS();
+        Scheduler scheduler = new FCFS(processes);
         CPU cpu = new CPU(scheduler, mmu, processes);
         cpu.run();
 
