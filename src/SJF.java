@@ -7,8 +7,16 @@ public class SJF extends Scheduler {
 
     public void addProcess(Process p) {
         /* TODO: you need to add some code here */
-        processes.add(p);
-        QuickSort(0,processes.size()-1);        //Sorting the processes based on burst time in decreasing order
+        if (!processes.isEmpty()) {         //If at least one process has arrived
+            int index=0;
+            for (int i = 0; i < processes.size(); i++) {                    //Locate the correct position of the process
+                if(p.getBurstTime()<processes.get(i).getBurstTime())        //Find the next process with bigger burst time than process p
+                    index=i;                                                //Keep the position of that process
+            }
+            processes.add(index,p);                 //Place process p on the correct position on the list
+        }
+        else                    //If no process has arrived
+            processes.add(p);
     }
 
 
@@ -24,6 +32,8 @@ public class SJF extends Scheduler {
         return null;            //If no processes have arrived
     }
 
+
+    /*
     //QuickSort algorithm that sorts the processes based on burst time in decreasing order
     protected void QuickSort(int low, int high){
         int temp;
@@ -50,5 +60,6 @@ public class SJF extends Scheduler {
             QuickSort(index+1, high);
         }
     }
+     */
 }
 
