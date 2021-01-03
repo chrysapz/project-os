@@ -8,9 +8,9 @@ public class Process {
         return arrivalTime;
     }
 
-    public int getBurstTime() {
-        return burstTime;
-    }
+    public int getBurstTime() { return burstTime; }
+
+    public int getMemoryRequirements() { return memoryRequirements; }
 
     public void setBurstTime(int bt) { this.burstTime = bt; }
 
