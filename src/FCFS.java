@@ -3,12 +3,8 @@ import java.util.Collections;
 
 public class FCFS extends Scheduler {
 
-    public FCFS(Process [] processes) {
+    public FCFS() {
         /* TODO: you _may_ need to add some code here */
-        for (Process p:processes) {
-            addProcess(p);
-        }
-        sorting(this.processes);
     }
 
     public void addProcess(Process p) {
@@ -29,7 +25,7 @@ public class FCFS extends Scheduler {
         }
     }
 
-    private void sorting(ArrayList<Process> processes)
+   /* private void sorting(ArrayList<Process> processes)
     {
         //sorting processes based on arrival time
         for (int i = 0; i < processes.size() ; i++) {
@@ -40,7 +36,7 @@ public class FCFS extends Scheduler {
                 }
             }
         }
-    }
+    }*/
 
 }
 
