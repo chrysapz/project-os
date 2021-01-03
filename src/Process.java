@@ -39,7 +39,7 @@ public class Process {
     }
 
 
-    public void wait(int currentClockTime) {
+    public void waitInBackround(int currentClockTime) {
         /* TODO: you need to add some code here
          * Hint: this should run every time a process stops running */
 

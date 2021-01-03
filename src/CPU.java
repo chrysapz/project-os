@@ -27,8 +27,12 @@ public class CPU {
                 scheduler.addProcess(processes[lasti]);
                 lasti++;
             }
-            //is in state READY
+            //setting from state READY to RUNNING
+            scheduler.getNextProcess().run(clock);
             currentProcess= scheduler.getNextProcess().getPCB().getPid();
+
+
+
 
             tick();
         }while (terminatedProcesses<processes.length);
