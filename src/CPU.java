@@ -20,12 +20,19 @@ public class CPU {
          * Hint: you need to run tick() in a loop, until there is nothing else to do... */
         do {
             tick();
+            currentProcess= scheduler.getNextProcess().getPCB().getPid();
         }while (processes != null);
     }
 
     public void tick() {
         /* TODO: you need to add some code here
          * Hint: this method should run once for every CPU cycle */
+        clock++;
+        if()
+    }
+
+    private int getIDNextProcess()
+    {
 
     }
 

@@ -35,8 +35,9 @@ public class FCFS extends Scheduler {
         for (int i = 0; i < processes.size() ; i++) {
             for (int j = 0; j < processes.size() -(i+1); j++)
             {
-                if(processes.get(j).getArrivalTime() > processes.get(j+1).getArrivalTime())
+                if(processes.get(j).getArrivalTime() > processes.get(j+1).getArrivalTime()) {
                     Collections.swap(processes, i, j);
+                }
             }
         }
     }
