@@ -8,6 +8,8 @@ public class Process {
         return arrivalTime;
     }
 
+    public void setArrivalTime(int arrivalTime) { this.arrivalTime = arrivalTime; }
+
     public int getBurstTime() {
         return burstTime;
     }
