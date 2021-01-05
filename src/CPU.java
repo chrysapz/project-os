@@ -19,12 +19,68 @@ public class CPU {
         /* TODO: you need to add some code here
          * Hint: you need to run tick() in a loop, until there is nothing else to do... */
 
+        int lasti=0;  //last place of the process that hasn't been added to the array list of processes at the scheduler
+        int terminatedProcesses=0;  //holds the terminated processes
+
+        //-------------------------------------//
+        Process current = null;
+        ArrayList<Integer> runtimes = new ArrayList<>();        //only for Round Robin, keeps how long each process has run
+        //-------------------------------------//
+
+        do{
+            //insert code for memory here
+            while(lasti < processes.length && processes[lasti].getArrivalTime() == clock)
+            {
+                scheduler.addProcess(processes[lasti]);
+                lasti++;
+
+                //-------------------------------------//
+                if (scheduler instanceof RoundRobin) runtimes.add(0);       //runtime initialization of each process that gets added
+                //-------------------------------------//
+            }
+
+            //-------------------------------------//
+            if (scheduler instanceof RoundRobin){
+
+                if (current == null) current = scheduler.getNextProcess();  //calls getNextProcess if current is null
+
+                if (current != null) {
+
+                    current.run(clock);
+                    currentProcess = current.getPCB().getPid();
+
+                    int processIndex = ((RoundRobin) scheduler).getProcessIndex();      //keeps processIndex from scheduler to keep track of runtimes
+                    runtimes.set(processIndex, runtimes.get(processIndex) + 1);         //increments the runtime of current process by 1
+
+                    ((RoundRobin) scheduler).printProcesses();                          //for debugging
+
+                    ArrayList<Integer> startTimes = current.getPCB().getStartTimes();   //gets startTimes from PCB
+                    if (runtimes.get(processIndex) == current.getBurstTime()) {         //is true when runtime of current process has reached its burst time
+                        //terminate current process
+                        terminatedProcesses++;
+
+                        scheduler.removeProcess(current);                               //remove process from scheduler
+                        runtimes.remove(processIndex);                                  //remove process runtime
+                        ((RoundRobin) scheduler).setProcessIndex(processIndex - 1);     //reduce the process index by one since an element got removed
+
+                        current = null;                                                 //make the current process null
+                    }
+                    else if (clock == startTimes.get(startTimes.size() - 1) + ((RoundRobin) scheduler).getQuantum() - 1) {  //is true if quantum ticks have passed since the last start time of the current process
+                        current.waitInBackround(clock);
+
+                        current = null;                                                 //make the current process null
+                    }
+                }
+            }
+            //-------------------------------------//
+            tick();
+        }while (terminatedProcesses < processes.length);
     }
 
     public void tick() {
         /* TODO: you need to add some code here
          * Hint: this method should run once for every CPU cycle */
-
+        clock++;
     }
 
 }
