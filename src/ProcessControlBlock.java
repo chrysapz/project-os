@@ -36,7 +36,7 @@ public class ProcessControlBlock {
         if (state == ProcessState.RUNNING && this.state != ProcessState.RUNNING)
             startTimes.add(currentClockTime);
         else if (this.state == ProcessState.RUNNING && state == ProcessState.READY)
-            stopTimes.add(currentClockTime);
+            stopTimes.add(currentClockTime + 1);
         this.state = state;
         //-------------------------------------//
     }

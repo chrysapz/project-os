@@ -12,19 +12,31 @@ public class Process {
         return burstTime;
     }
 
-    public int getMemoryRequirements() { return memoryRequirements; }
+    //-------------------------------------//
 
-    public void setBurstTime(int bt) { this.burstTime = bt; }
+    public void setRunTime(int runTime) {
+        this.runTime = runTime;
+    }
+
+    public int getRunTime(){return this.runTime;}
+    //-------------------------------------//
+
+    public int getMemoryRequirements() { return memoryRequirements; }
 
     private int arrivalTime;
     private int burstTime;
     private int memoryRequirements;
+
+    //-------------------------------------//
+    private int runTime;                        //keeps tack of how long the process has run
+    //-------------------------------------//
 
     public Process(int arrivalTime, int burstTime, int memoryRequirements) {
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
         this.memoryRequirements = memoryRequirements;
         this.pcb = new ProcessControlBlock();
+
     }
 
     public ProcessControlBlock getPCB() {
@@ -34,7 +46,9 @@ public class Process {
     public void run(int currentClockTime) {
         /* TODO: you need to add some code here
          * Hint: this should run every time a process starts running */
-
+        //-------------------------------------//
+        if (this.getPCB().getStartTimes().isEmpty()) this.runTime = 0;      //initialization of runtime when process runs for the first time
+        //-------------------------------------//
         this.pcb.setState(ProcessState.RUNNING, currentClockTime);
     }
 
@@ -46,7 +60,6 @@ public class Process {
         this.pcb.setState(ProcessState.READY, currentClockTime);
     }
 
-    //https://afteracademy.com/blog/what-is-burst-arrival-exit-response-waiting-turnaround-time-and-throughput
 
     public double getWaitingTime() {
         /* TODO: you need to add some code here

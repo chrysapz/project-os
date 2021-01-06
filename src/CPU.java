@@ -24,7 +24,6 @@ public class CPU {
 
         //-------------------------------------//
         Process current = null;
-        ArrayList<Integer> runtimes = new ArrayList<>();        //only for Round Robin, keeps how long each process has run
         //-------------------------------------//
 
         do{
@@ -33,10 +32,6 @@ public class CPU {
             {
                 scheduler.addProcess(processes[lasti]);
                 lasti++;
-
-                //-------------------------------------//
-                if (scheduler instanceof RoundRobin) runtimes.add(0);       //runtime initialization of each process that gets added
-                //-------------------------------------//
             }
 
             //-------------------------------------//
@@ -48,20 +43,21 @@ public class CPU {
 
                     current.run(clock);
                     currentProcess = current.getPCB().getPid();
+                    current.setRunTime(current.getRunTime() + 1);           //increments the runtime of the process
 
-                    int processIndex = ((RoundRobin) scheduler).getProcessIndex();      //keeps processIndex from scheduler to keep track of runtimes
-                    runtimes.set(processIndex, runtimes.get(processIndex) + 1);         //increments the runtime of current process by 1
-
-                    ((RoundRobin) scheduler).printProcesses();                          //for debugging
+                    //prints processes for debugging
+                    /*for (int i = 0; i < ((RoundRobin) scheduler).getProcesses().size(); i++){
+                        if (((Process)((RoundRobin) scheduler).getProcesses().get(i)) == current) System.out.print(" _" + ((Process)((RoundRobin) scheduler).getProcesses().get(i)).getBurstTime() + "_ ");
+                        else System.out.print(" " + ((Process)((RoundRobin) scheduler).getProcesses().get(i)).getBurstTime() + " ");
+                    }
+                    System.out.println("");*/
 
                     ArrayList<Integer> startTimes = current.getPCB().getStartTimes();   //gets startTimes from PCB
-                    if (runtimes.get(processIndex) == current.getBurstTime()) {         //is true when runtime of current process has reached its burst time
+                    if (current.getRunTime() == current.getBurstTime()) {         //is true when runtime of current process has reached its burst time
                         //terminate current process
                         terminatedProcesses++;
 
-                        scheduler.removeProcess(current);                               //remove process from scheduler
-                        runtimes.remove(processIndex);                                  //remove process runtime
-                        ((RoundRobin) scheduler).setProcessIndex(processIndex - 1);     //reduce the process index by one since an element got removed
+                        scheduler.removeProcess(current);
 
                         current = null;                                                 //make the current process null
                     }
@@ -74,7 +70,17 @@ public class CPU {
             }
             //-------------------------------------//
             tick();
-        }while (terminatedProcesses < processes.length);
+        }
+        while (terminatedProcesses < processes.length);
+        /* Prints stuff also for debugging
+        for (int i = 0; i < processes.length; i++){
+            System.out.println("tat: " + processes[i].getTurnAroundTime() + " wt: " + processes[i].getWaitingTime());
+        }
+        ArrayList start = processes[0].getPCB().getStartTimes();
+        ArrayList stop = processes[0].getPCB().getStopTimes();
+        for (int i = 0; i<start.size(); i++) System.out.print(start.get(i) + " ");
+        System.out.println("");
+        for (int i = 0; i<stop.size(); i++) System.out.print(stop.get(i) + " ");*/
     }
 
     public void tick() {

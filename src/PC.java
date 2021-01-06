@@ -10,7 +10,9 @@ public class PC {
                 new Process(0, 4, 10),
                 new Process(1, 5, 40),
                 new Process(2, 2, 25),
-                new Process(4, 1, 30)
+                new Process(3, 1, 30),
+                new Process(4, 6, 30),
+                new Process(6, 3, 30)
         };
         final int[] availableBlockSizes = {15, 40, 10, 20}; // sizes in kB
         MemoryAllocationAlgorithm algorithm = new BestFit(availableBlockSizes);
