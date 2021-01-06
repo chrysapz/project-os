@@ -23,7 +23,7 @@ public class WorstFit extends MemoryAllocationAlgorithm {
                     address = i;        //Keep the block address where the process fits
                 }
                 else if (availableBlockSizes[i] > availableBlockSizes[address])       //Find the block with the largest available size
-                    address=i;
+                    address = i;
             }
         }
         if(fit)         //If the process fits
