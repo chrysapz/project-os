@@ -22,18 +22,55 @@ public class CPU {
         QuickSort(0,processes.length-1);
         int lasti=0;  //last place of the process that hasn't been added to the array list of processes at the scheduler
         int terminatedProcesses=0;  //holds the terminated processes
+        Process current=null;
         do{
             //insert code for memory here
-            while(processes[lasti].getArrivalTime()==clock)
+            while(lasti<processes.length && processes[lasti].getArrivalTime()==clock)
             {
                 scheduler.addProcess(processes[lasti]);
                 lasti++;
             }
             //is in state READY
-            currentProcess= scheduler.getNextProcess().getPCB().getPid();
+            if (current == null)
+                current = scheduler.getNextProcess();  //calls getNextProcess if current is null
+
+            if (current != null) {
+
+                current.run(clock);
+                currentProcess = current.getPCB().getPid();
+                current.setRunTime(current.getRunTime() + 1);           //increments the runtime of the process
+
+                if (current.getRunTime() == current.getBurstTime()) {         //is true when runtime of current process has reached its burst time
+                    current.getPCB().setState(ProcessState.TERMINATED, clock); //terminate current process
+                    terminatedProcesses++;
+
+                    scheduler.removeProcess(current);
+
+                    current = null;                                                 //make the current process null
+                }
+                else if(scheduler instanceof RoundRobin){
+                    ArrayList<Integer> startTimes = current.getPCB().getStartTimes();   //gets startTimes from PCB
+                    if (clock == startTimes.get(startTimes.size() - 1) - 1) {  //is true if quantum ticks have passed since the last start time of the current process
+                        current.waitInBackround(clock);
+
+                        current = null;        //make the current process null
+                    }
+                }
+            }
 
             tick();
         }while (terminatedProcesses<processes.length);
+
+        /*
+        for(int i=0; i<processes.length; i++)
+        {
+            System.out.println(i+1);
+            System.out.println("TAT " + processes[i].getTurnAroundTime());
+            System.out.println("WT " + processes[i].getWaitingTime());
+            System.out.println("RT " + processes[i].getResponseTime());
+            System.out.println();
+        }
+         */
     }
 
     public void tick() {
@@ -59,10 +96,10 @@ public class CPU {
                     i++;
                 }
             }
-            temp = processes[i+1].getArrivalTime();
-            processes[i+1].setArrivalTime(processes[high].getArrivalTime());
+            temp = processes[i].getArrivalTime();
+            processes[i].setArrivalTime(processes[high].getArrivalTime());
             processes[high].setArrivalTime(temp);
-            int index=i+1;
+            int index=i;
             QuickSort(low, index-1);
             QuickSort(index+1, high);
         }
