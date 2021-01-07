@@ -1,8 +1,10 @@
 public class PC {
-
+    /**
+     * We suppose the processes come in chronological order
+     * @param args
+     */
     public static void main(String[] args) {
         /* TODO: You may change this method to perform any tests you like */
-        System.out.println("hello");
         final Process[] processes = {
                 // Process parameters are: arrivalTime, burstTime, memoryRequirements (kB)
                 new Process(0, 5, 10),
@@ -16,6 +18,7 @@ public class PC {
         Scheduler scheduler = new FCFS();
         CPU cpu = new CPU(scheduler, mmu, processes);
         cpu.run();
+
     }
 
 

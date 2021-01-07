@@ -18,13 +18,30 @@ public class CPU {
     public void run() {
         /* TODO: you need to add some code here
          * Hint: you need to run tick() in a loop, until there is nothing else to do... */
+        int lasti=0;  //last place of the process that hasn't been added to the array list of processes at the scheduler
+        int terminatedProcesses=0;  //holds the terminated processes
+        do{
+            //insert code for memory here
+            while(processes[lasti].getArrivalTime()==clock)
+            {
+                scheduler.addProcess(processes[lasti]);
+                lasti++;
+            }
+            //setting from state READY to RUNNING
+            scheduler.getNextProcess().run(clock);
+            currentProcess= scheduler.getNextProcess().getPCB().getPid();
 
+
+
+
+            tick();
+        }while (terminatedProcesses<processes.length);
     }
 
     public void tick() {
         /* TODO: you need to add some code here
          * Hint: this method should run once for every CPU cycle */
-
+        clock++;
     }
 
 }
