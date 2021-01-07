@@ -23,6 +23,8 @@ public class Process {
 
     public int getMemoryRequirements() { return memoryRequirements; }
 
+    public void setBurstTime(int bt) { this.burstTime = bt; }
+
     private int arrivalTime;
     private int burstTime;
     private int memoryRequirements;
@@ -36,7 +38,6 @@ public class Process {
         this.burstTime = burstTime;
         this.memoryRequirements = memoryRequirements;
         this.pcb = new ProcessControlBlock();
-
     }
 
     public ProcessControlBlock getPCB() {
@@ -60,6 +61,7 @@ public class Process {
         this.pcb.setState(ProcessState.READY, currentClockTime);
     }
 
+    //https://afteracademy.com/blog/what-is-burst-arrival-exit-response-waiting-turnaround-time-and-throughput
 
     public double getWaitingTime() {
         /* TODO: you need to add some code here
