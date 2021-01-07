@@ -81,7 +81,7 @@ public class CPU {
 
     //QuickSort algorithm that sorts the processes based on arrival time in decreasing order
     private void QuickSort(int low, int high){
-        int temp;
+        Process temp;
         if(low<high)
         {
             int pivot=processes[high].getArrivalTime();
@@ -90,15 +90,15 @@ public class CPU {
             {
                 if(processes[j].getArrivalTime()<pivot)
                 {
-                    temp = processes[i].getArrivalTime();
-                    processes[i].setArrivalTime(processes[j].getArrivalTime());
-                    processes[j].setArrivalTime(temp);
+                    temp = processes[i];
+                    processes[i]=processes[j];
+                    processes[j]=temp;
                     i++;
                 }
             }
-            temp = processes[i].getArrivalTime();
-            processes[i].setArrivalTime(processes[high].getArrivalTime());
-            processes[high].setArrivalTime(temp);
+            temp = processes[i];
+            processes[i]=processes[high];
+            processes[high]=temp;
             int index=i;
             QuickSort(low, index-1);
             QuickSort(index+1, high);
