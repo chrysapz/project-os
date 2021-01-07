@@ -13,10 +13,14 @@ public class Process {
 
     public int getBurstTime() { return burstTime; }
 
-    public int getMemoryRequirements() { return memoryRequirements; }
+    //-------------------------------------//
+
+    public int getRunTime(){return this.runTime;}
+    //-------------------------------------//
 
     public int getMemoryRequirements() { return memoryRequirements; }
 
+>>>>>>>>> Temporary merge branch 2
     public void setBurstTime(int bt) { this.burstTime = bt; }
 
     //-------------------------------------//
@@ -24,8 +28,6 @@ public class Process {
     public void setRunTime(int runTime) {
         this.runTime = runTime;
     }
-
-    public int getRunTime(){return this.runTime;}
     //-------------------------------------//
 
     private int arrivalTime;
@@ -51,7 +53,7 @@ public class Process {
         /* TODO: you need to add some code here
          * Hint: this should run every time a process starts running */
         //-------------------------------------//
-        if (this.getPCB().getStartTimes().isEmpty()) this.runTime = 0;      //initialization of runtime when process runs for the first time
+        if (this.getPCB().getStartTimes().isEmpty()) this.runTime = 0;
         //-------------------------------------//
         this.pcb.setState(ProcessState.RUNNING, currentClockTime);
     }
