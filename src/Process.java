@@ -3,32 +3,25 @@ import java.util.ArrayList;
 public class Process {
     private ProcessControlBlock pcb;
 
-    public void setArrivalTime(int arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
 
     public int getArrivalTime() {
         return arrivalTime;
     }
 
-    public int getBurstTime() { return burstTime; }
-
-    //-------------------------------------//
-
-    public int getRunTime(){return this.runTime;}
-    //-------------------------------------//
-
-    public int getMemoryRequirements() { return memoryRequirements; }
-
->>>>>>>>> Temporary merge branch 2
-    public void setBurstTime(int bt) { this.burstTime = bt; }
+    public int getBurstTime() {
+        return burstTime;
+    }
 
     //-------------------------------------//
 
     public void setRunTime(int runTime) {
         this.runTime = runTime;
     }
+
+    public int getRunTime(){return this.runTime;}
     //-------------------------------------//
+
+    public int getMemoryRequirements() { return memoryRequirements; }
 
     private int arrivalTime;
     private int burstTime;
@@ -43,6 +36,7 @@ public class Process {
         this.burstTime = burstTime;
         this.memoryRequirements = memoryRequirements;
         this.pcb = new ProcessControlBlock();
+
     }
 
     public ProcessControlBlock getPCB() {
@@ -53,7 +47,7 @@ public class Process {
         /* TODO: you need to add some code here
          * Hint: this should run every time a process starts running */
         //-------------------------------------//
-        if (this.getPCB().getStartTimes().isEmpty()) this.runTime = 0;
+        if (this.getPCB().getStartTimes().isEmpty()) this.runTime = 0;      //initialization of runtime when process runs for the first time
         //-------------------------------------//
         this.pcb.setState(ProcessState.RUNNING, currentClockTime);
     }
@@ -66,7 +60,6 @@ public class Process {
         this.pcb.setState(ProcessState.READY, currentClockTime);
     }
 
-    //https://afteracademy.com/blog/what-is-burst-arrival-exit-response-waiting-turnaround-time-and-throughput
 
     public double getWaitingTime() {
         /* TODO: you need to add some code here
