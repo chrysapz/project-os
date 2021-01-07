@@ -1,3 +1,4 @@
+
 public class SJF extends Scheduler {
 
     public SJF() {
@@ -31,4 +32,3 @@ public class SJF extends Scheduler {
         return null;            //If no processes have arrived
     }
 
-}
