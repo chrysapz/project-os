@@ -30,6 +30,7 @@ public class NextFit extends MemoryAllocationAlgorithm {
           //the mod operation will help in going back to the starting block when the end is reached
           i=(i+1)%availableBlockSizes.length;
       }
+
       return address;             //If the process fits return the address it was stored in, if not return -1.
     }
 }
