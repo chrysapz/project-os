@@ -45,13 +45,6 @@ public class CPU {
                     currentProcess = current.getPCB().getPid();
                     current.setRunTime(current.getRunTime() + 1);           //increments the runtime of the process
 
-                    //prints processes for debugging
-                    /*for (int i = 0; i < ((RoundRobin) scheduler).getProcesses().size(); i++){
-                        if (((Process)((RoundRobin) scheduler).getProcesses().get(i)) == current) System.out.print(" _" + ((Process)((RoundRobin) scheduler).getProcesses().get(i)).getBurstTime() + "_ ");
-                        else System.out.print(" " + ((Process)((RoundRobin) scheduler).getProcesses().get(i)).getBurstTime() + " ");
-                    }
-                    System.out.println("");*/
-
                     ArrayList<Integer> startTimes = current.getPCB().getStartTimes();   //gets startTimes from PCB
                     if (current.getRunTime() == current.getBurstTime()) {         //is true when runtime of current process has reached its burst time
                         //terminate current process
@@ -72,15 +65,6 @@ public class CPU {
             tick();
         }
         while (terminatedProcesses < processes.length);
-        /* Prints stuff also for debugging
-        for (int i = 0; i < processes.length; i++){
-            System.out.println("tat: " + processes[i].getTurnAroundTime() + " wt: " + processes[i].getWaitingTime());
-        }
-        ArrayList start = processes[0].getPCB().getStartTimes();
-        ArrayList stop = processes[0].getPCB().getStopTimes();
-        for (int i = 0; i<start.size(); i++) System.out.print(start.get(i) + " ");
-        System.out.println("");
-        for (int i = 0; i<stop.size(); i++) System.out.print(stop.get(i) + " ");*/
     }
 
     public void tick() {

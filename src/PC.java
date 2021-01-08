@@ -15,7 +15,7 @@ public class PC {
                 new Process(6, 3, 30)
         };
         final int[] availableBlockSizes = {15, 40, 10, 20}; // sizes in kB
-        MemoryAllocationAlgorithm algorithm = new BestFit(availableBlockSizes);
+        MemoryAllocationAlgorithm algorithm = new NextFit(availableBlockSizes);
         MMU mmu = new MMU(availableBlockSizes, algorithm);
         Scheduler scheduler = new RoundRobin(2);
         CPU cpu = new CPU(scheduler, mmu, processes);

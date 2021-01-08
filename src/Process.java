@@ -90,4 +90,3 @@ public class Process {
         return (this.burstTime + this.getWaitingTime());
     }
 }
-
