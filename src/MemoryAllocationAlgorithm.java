@@ -4,9 +4,9 @@ public abstract class MemoryAllocationAlgorithm {
 
     protected final int[] availableBlockSizes;
     protected ArrayList<MemorySlot> currentlyUsedMemorySlots;
-    protected ArrayList<ArrayList<MemorySlot>> memorySlotsNeeded = new ArrayList<ArrayList<MemorySlot>>();
 
     /*/////////////////////////////////////////////////////////////////////////////////////*/
+    protected ArrayList<ArrayList<MemorySlot>> memory = new ArrayList<ArrayList<MemorySlot>>();
     protected int slot;
     /*/////////////////////////////////////////////////////////////////////////////////////*/
 
@@ -20,12 +20,17 @@ public abstract class MemoryAllocationAlgorithm {
 
     /*/////////////////////////////////////////////////////////////////////////////////////*/
 
-    public void setMemorySlotsNeeded(ArrayList<ArrayList<MemorySlot>> memorySlotsNeeded) {
-        this.memorySlotsNeeded = memorySlotsNeeded;
+    public void setMemory(ArrayList<ArrayList<MemorySlot>> memory) {
+        this.memory = memory;
     }
 
     public int getSlot() {
         return slot;
+    }
+
+
+    public void setCurrentlyUsedMemorySlots(ArrayList<MemorySlot> currentlyUsedMemorySlots) {
+        this.currentlyUsedMemorySlots = currentlyUsedMemorySlots;
     }
 
     /*/////////////////////////////////////////////////////////////////////////////////////*/

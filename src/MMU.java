@@ -9,7 +9,7 @@ public class MMU {
     private ArrayList<MemorySlot> currentlyUsedMemorySlots;
     /*/////////////////////////////////////////////////////////////////////////////////////*/
 
-    private ArrayList<ArrayList<MemorySlot>> memorySlotsNeeded = new ArrayList<ArrayList<MemorySlot>>();
+    private ArrayList<ArrayList<MemorySlot>> memory = new ArrayList<ArrayList<MemorySlot>>();
 
 
     public MMU(int[] availableBlockSizes, MemoryAllocationAlgorithm algorithm) {
@@ -26,60 +26,38 @@ public class MMU {
 
         /*/////////////////////////////////////////////////////////////////////////////////////*/
 
-        algorithm.setMemorySlotsNeeded(memorySlotsNeeded);
+        algorithm.setMemory(memory);
 
         int address = algorithm.fitProcess(p);
         if(address != -1){
+
+            ArrayList<MemorySlot> block = memory.get(address);
+            int slotIndex = algorithm.getSlot();
+
             fit = true;
-
-            int start = memorySlotsNeeded.get(address).get(algorithm.getSlot()).getEnd() - memorySlotsNeeded.get(address).get(algorithm.getSlot()).getStart();
-            int end = memorySlotsNeeded.get(address).get(algorithm.getSlot()).getEnd() + p.getMemoryRequirements();
-            MemorySlot newSlot = new MemorySlot(start,end,0,availableBlockSizes[address]);
-            memorySlotsNeeded.get(address).add(newSlot);
-
-            memorySlotsNeeded.get(address).get(algorithm.getSlot()).setStart(memorySlotsNeeded.get(address).get(algorithm.getSlot()).getEnd() - memorySlotsNeeded.get(address).get(algorithm.getSlot()).getStart());
-            start=memorySlotsNeeded.get(address).get(algorithm.getSlot()).getStart();
-            memorySlotsNeeded.get(address).get(algorithm.getSlot()).setEnd(memorySlotsNeeded.get(address).get(algorithm.getSlot()).getEnd() + p.getMemoryRequirements());
-            end=memorySlotsNeeded.get(address).get(algorithm.getSlot()).getEnd();
-/*
-            System.out.println(memorySlotsNeeded.get(address).getStart());
-            System.out.println(memorySlotsNeeded.get(address).getEnd());
-            System.out.println(memorySlotsNeeded.get(address).getBlockStart());
-            System.out.println(memorySlotsNeeded.get(address).getBlockEnd());
-*/
-
+            int start = 0;
+            if(block.size() > 1)
+                start = block.get(slotIndex - 1).getEnd();
+            int end = start + p.getMemoryRequirements();
             MemorySlot usedSlot = new MemorySlot(start, end, 0, availableBlockSizes[address] );
-            usedSlot.setBlockAddress(address);
+
             usedSlot.setPid(p.getPCB().getPid());
+            usedSlot.setBlockAddress(address);
+            block.add(slotIndex,usedSlot);
+
             currentlyUsedMemorySlots.add(usedSlot);
+            algorithm.setCurrentlyUsedMemorySlots(currentlyUsedMemorySlots);
             System.out.println("added " + p.getBurstTime() + " in address " + address + " and slot " + algorithm.getSlot());
 
-            /*
-            System.out.println(usedSlot.getStart());
-            System.out.println(usedSlot.getEnd());
-            System.out.println(usedSlot.getBlockStart());
-            System.out.println(usedSlot.getBlockEnd());
-            //memorySlotsNeeded.set(address,usedSlot);
-            currentlyUsedMemorySlots.add(usedSlot);
 
-             */
+            block.get(slotIndex + 1).setStart(block.get(slotIndex).getEnd());
 
-            /*
-            for(int i=0; i<currentlyUsedMemorySlots.size(); i++)
-            {
-                System.out.println(currentlyUsedMemorySlots.get(address).getStart());
-                System.out.println(currentlyUsedMemorySlots.get(address).getEnd());
-                System.out.println(currentlyUsedMemorySlots.get(address).getBlockStart());
-                System.out.println(currentlyUsedMemorySlots.get(address).getBlockEnd());
-            }
-
-             */
         }
         return fit;
     }
 
-    public ArrayList<ArrayList<MemorySlot>> getMemorySlotsNeeded() {
-        return memorySlotsNeeded;
+    public ArrayList<ArrayList<MemorySlot>> getMemory() {
+        return memory;
     }
 
 
@@ -91,6 +69,9 @@ public class MMU {
         return availableBlockSizes;
     }
 
+    public MemoryAllocationAlgorithm getAlgorithm() {
+        return algorithm;
+    }
 
     /*/////////////////////////////////////////////////////////////////////////////////////*/
 

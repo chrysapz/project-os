@@ -25,9 +25,9 @@ public class CPU {
         for (int i=0; i<mmu.getAvailableBlockSizes().length; i++)
         {
             ArrayList<MemorySlot> slots = new ArrayList<MemorySlot>();
-            MemorySlot slot = new MemorySlot(0,0,0,mmu.getAvailableBlockSizes()[i]);
+            MemorySlot slot = new MemorySlot(0,mmu.getAvailableBlockSizes()[i],0,mmu.getAvailableBlockSizes()[i]);
             slots.add(slot);
-            mmu.getMemorySlotsNeeded().add(slots);
+            mmu.getMemory().add(slots);
         }
 
         /*/////////////////////////////////////////////////////////////////////////////////////*/
@@ -40,9 +40,9 @@ public class CPU {
         /*/////////////////////////////////////////////////////////////////////////////////////*/
         boolean fit;
         Process current=null;
-        Process temp;
-        int currentBlock = -1;
-        int currentSlot = -1;
+        Process process;
+        int currentBlockIndex = -1;
+        int currentSlotIndex = -1;
         /*/////////////////////////////////////////////////////////////////////////////////////*/
 
         do{
@@ -50,24 +50,25 @@ public class CPU {
             /*/////////////////////////////////////////////////////////////////////////////////////*/
             if(current==null) {
                 for (int i = 0; i < priorityQueue.size(); i++) {
-                    temp = priorityQueue.get(i);
-                    fit = mmu.loadProcessIntoRAM(temp);
-                    //priorityQueue.remove(temp);
+                    process = priorityQueue.get(i);
+                    fit = mmu.loadProcessIntoRAM(process);
                     if (fit) {
-                        scheduler.addProcess(temp);
-                        priorityQueue.remove(temp);
+                        process.getPCB().setState(ProcessState.READY,clock);
+                        scheduler.addProcess(process);
+                        priorityQueue.remove(process);
                     }
                 }
             }
             while(lasti<processes.length && processes[lasti].getArrivalTime()==clock)
             {
-                    temp = processes[lasti];
+                    process = processes[lasti];
                     fit = mmu.loadProcessIntoRAM(processes[lasti]);
-                    if (fit)
-                        scheduler.addProcess(temp);
+                    if (fit) {
+                        process.getPCB().setState(ProcessState.READY,clock);
+                        scheduler.addProcess(process);
+                    }
                     else {
-                        priorityQueue.add(temp);
-                        //terminatedProcesses++;
+                        priorityQueue.add(process);
                     }
                     lasti++;
             }
@@ -75,69 +76,81 @@ public class CPU {
 
             //is in state READY
             if (current == null) {
-                /*for (int i=0; i<scheduler.processes.size(); i++)
-                    System.out.println(scheduler.processes.get(i).getBurstTime());
-                 */
                 current = scheduler.getNextProcess();  //calls getNextProcess if current is null
-                System.out.println("process " + current.getBurstTime() + " started");
             }
 
             if (current != null) {
+                current.run(clock);
+                currentProcess = current.getPCB().getPid();
+                current.setRunTime(current.getRunTime() + 1);           //increments the runtime of the process
                 System.out.println("runtime " + current.getRunTime());
-                    current.run(clock);
-                    currentProcess = current.getPCB().getPid();
-                    current.setRunTime(current.getRunTime() + 1);           //increments the runtime of the process
-                    if (current.getRunTime() == current.getBurstTime()) {         //is true when runtime of current process has reached its burst time
-                        current.getPCB().setState(ProcessState.TERMINATED, clock); //terminate current process
-                        terminatedProcesses++;
+                if (current.getRunTime() == current.getBurstTime()) {         //is true when runtime of current process has reached its burst time
+                    current.getPCB().setState(ProcessState.TERMINATED, clock); //terminate current process
+                    terminatedProcesses++;
 
 
-                        /*/////////////////////////////////////////////////////////////////////////////////////*/
-                        //System.out.println(currentProcess);
-                        for(int i=0; i<mmu.getCurrentlyUsedMemorySlots().size(); i++) {
-                            //System.out.println(mmu.getCurrentlyUsedMemorySlots().get(i).getPid());
-                            if (mmu.getCurrentlyUsedMemorySlots().get(i).getPid() == currentProcess) {
-                                currentSlot = i;
-                                currentBlock = mmu.getCurrentlyUsedMemorySlots().get(i).getBlockAddress();
-                            }
-                            mmu.getCurrentlyUsedMemorySlots().remove(currentSlot);
-                            System.out.println("removed process " + current.getBurstTime() + "'s slot from address " + currentBlock);
-                            mmu.getMemorySlotsNeeded().get(currentBlock).get(currentSlot).setStart(mmu.getMemorySlotsNeeded().get(currentBlock).get(currentSlot).getEnd() - current.getMemoryRequirements());
-                            mmu.getMemorySlotsNeeded().get(currentBlock).get(currentSlot).setEnd(0);
-                            mmu.getMemorySlotsNeeded().get(currentBlock).get(currentSlot).setOccupied(false);
-                            mmu.getMemorySlotsNeeded().get(currentBlock).get(currentSlot).setPid(-1);
-                            //mmu.getMemorySlotsNeeded().get(currentBlock).remove(currentSlot);
-                        }
-                        /*/////////////////////////////////////////////////////////////////////////////////////*/
-
-
-                        scheduler.removeProcess(current);
-
-                        current = null;                                                 //make the current process null
-                    } else if (scheduler instanceof RoundRobin) {
-                        ArrayList<Integer> startTimes = current.getPCB().getStartTimes();   //gets startTimes from PCB
-                        if (clock == startTimes.get(startTimes.size() - 1) - 1) {  //is true if quantum ticks have passed since the last start time of the current process
-                            current.waitInBackround(clock);
-
-                            current = null;        //make the current process null
+                    /*/////////////////////////////////////////////////////////////////////////////////////*/
+                    for(int i=0; i<mmu.getCurrentlyUsedMemorySlots().size(); i++) {
+                        if (mmu.getCurrentlyUsedMemorySlots().get(i).getPid() == currentProcess) {
+                                currentSlotIndex = i;
+                                currentBlockIndex = mmu.getCurrentlyUsedMemorySlots().get(i).getBlockAddress();
                         }
                     }
+
+                    int index=-1;
+                    for(int i=0; i<mmu.getMemory().get(currentBlockIndex).size(); i++)
+                    {
+                        if(mmu.getMemory().get(currentBlockIndex).get(i) == mmu.getCurrentlyUsedMemorySlots().get(currentSlotIndex))
+                            index = i;
+                    }
+                    MemorySlot currentSlot = mmu.getMemory().get(currentBlockIndex).get(index);
+                    MemorySlot prevSlot;
+                    MemorySlot nextSlot;
+
+
+                    if (index > 0) {
+                        prevSlot = mmu.getMemory().get(currentBlockIndex).get(index - 1);
+                        if (!mmu.getCurrentlyUsedMemorySlots().contains(prevSlot)) {
+                            currentSlot.setStart(prevSlot.getStart());
+                            mmu.getMemory().get(currentBlockIndex).remove(prevSlot);
+                            index = index - 1;
+                        }
+                    }
+                    if (index + 1 < mmu.getMemory().get(currentBlockIndex).size()) {
+                        nextSlot = mmu.getMemory().get(currentBlockIndex).get(index + 1);
+                        if (!mmu.getCurrentlyUsedMemorySlots().contains(nextSlot)) {
+                            currentSlot.setEnd(nextSlot.getEnd());
+                            mmu.getMemory().get(currentBlockIndex).remove(nextSlot);
+                        }
+                    }
+
+
+                    System.out.println("block " + currentBlockIndex + " has " + mmu.getMemory().get(currentBlockIndex).size());
+
+
+                    mmu.getCurrentlyUsedMemorySlots().remove(currentSlotIndex);
+                    mmu.getAlgorithm().setCurrentlyUsedMemorySlots(mmu.getCurrentlyUsedMemorySlots());
+                    System.out.println("removed process " + current.getBurstTime() + "'s slot from address " + currentBlockIndex);
+
+                    /*/////////////////////////////////////////////////////////////////////////////////////*/
+
+
+                    scheduler.removeProcess(current);
+
+                    current = null;                                                 //make the current process null
+                } else if (scheduler instanceof RoundRobin) {
+                    ArrayList<Integer> startTimes = current.getPCB().getStartTimes();   //gets startTimes from PCB
+                    if (clock == startTimes.get(startTimes.size() - 1) - 1) {  //is true if quantum ticks have passed since the last start time of the current process
+                        current.waitInBackround(clock);
+
+                        current = null;        //make the current process null
+                    }
                 }
+            }
 
             tick();
             System.out.println("sec " + clock);
         }while (terminatedProcesses<processes.length);
-
-        /*
-        for(int i=0; i<processes.length; i++)
-        {
-            System.out.println(i+1);
-            System.out.println("TAT " + processes[i].getTurnAroundTime());
-            System.out.println("WT " + processes[i].getWaitingTime());
-            System.out.println("RT " + processes[i].getResponseTime());
-            System.out.println();
-        }
-         */
     }
 
 
@@ -173,6 +186,4 @@ public class CPU {
             QuickSort(index+1, high);
         }
     }
-
-
 }

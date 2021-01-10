@@ -12,7 +12,6 @@ public class MemorySlot {
     /*/////////////////////////////////////////////////////////////////////////////////////*/
     private int blockAddress;
     private int pid;
-    private boolean occupied = false;
     /*/////////////////////////////////////////////////////////////////////////////////////*/
 
     public MemorySlot(int start, int end, int blockStart, int blockEnd) {
@@ -66,15 +65,6 @@ public class MemorySlot {
 
     public int getPid() {
         return pid;
-    }
-
-
-    public boolean isOccupied() {
-        return occupied;
-    }
-
-    public void setOccupied(boolean occupied) {
-        this.occupied = occupied;
     }
 
 
