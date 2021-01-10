@@ -61,22 +61,24 @@ public class CPU {
             }
             while(lasti<processes.length && processes[lasti].getArrivalTime()==clock)
             {
-                    process = processes[lasti];
-                    fit = mmu.loadProcessIntoRAM(processes[lasti]);
-                    if (fit) {
-                        process.getPCB().setState(ProcessState.READY,clock);
-                        scheduler.addProcess(process);
-                    }
-                    else {
-                        priorityQueue.add(process);
-                    }
-                    lasti++;
+                process = processes[lasti];
+                System.out.println("process " + process.getBurstTime() + " arrives");
+                fit = mmu.loadProcessIntoRAM(processes[lasti]);
+                if (fit) {
+                    process.getPCB().setState(ProcessState.READY,clock);
+                    scheduler.addProcess(process);
+                }
+                else {
+                    priorityQueue.add(process);
+                }
+                lasti++;
             }
             /*/////////////////////////////////////////////////////////////////////////////////////*/
 
             //is in state READY
             if (current == null) {
                 current = scheduler.getNextProcess();  //calls getNextProcess if current is null
+                System.out.println("process " + current.getBurstTime() + " starts");
             }
 
             if (current != null) {
@@ -125,7 +127,7 @@ public class CPU {
                     }
 
 
-                    System.out.println("block " + currentBlockIndex + " has " + mmu.getMemory().get(currentBlockIndex).size());
+                    System.out.println("block " + currentBlockIndex + " has " + mmu.getMemory().get(currentBlockIndex).size() + " slots");
 
 
                     mmu.getCurrentlyUsedMemorySlots().remove(currentSlotIndex);

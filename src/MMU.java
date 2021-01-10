@@ -30,7 +30,6 @@ public class MMU {
 
         int address = algorithm.fitProcess(p);
         if(address != -1){
-
             ArrayList<MemorySlot> block = memory.get(address);
             int slotIndex = algorithm.getSlot();
 
@@ -53,6 +52,7 @@ public class MMU {
             block.get(slotIndex + 1).setStart(block.get(slotIndex).getEnd());
 
         }
+        else System.out.println("process " + p.getBurstTime() + " doesn't fit");
         return fit;
     }
 
