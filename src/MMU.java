@@ -4,10 +4,7 @@ public class MMU {
 
     private final int[] availableBlockSizes;
     private MemoryAllocationAlgorithm algorithm;
-
-    /*/////////////////////////////////////////////////////////////////////////////////////*/
     private ArrayList<MemorySlot> currentlyUsedMemorySlots;
-    /*/////////////////////////////////////////////////////////////////////////////////////*/
 
     private ArrayList<ArrayList<MemorySlot>> memory = new ArrayList<ArrayList<MemorySlot>>();
 
@@ -26,6 +23,18 @@ public class MMU {
 
         /*/////////////////////////////////////////////////////////////////////////////////////*/
 
+        if (memory.isEmpty()){                                        //initialize the ArrayList memory, by adding an empty slot for each block
+            for (int i = 0; i < availableBlockSizes.length; i++)
+            {
+                ArrayList<MemorySlot> slots = new ArrayList<MemorySlot>();
+                int blockStart = 0;
+                if(i > 0) blockStart = availableBlockSizes[i - 1];
+                MemorySlot slot = new MemorySlot(blockStart,blockStart + availableBlockSizes[i], blockStart,blockStart + availableBlockSizes[i]);
+                slots.add(slot);
+                memory.add(slots);
+            }
+        }
+
         algorithm.setMemory(memory);
 
         int address = algorithm.fitProcess(p);
@@ -34,11 +43,18 @@ public class MMU {
             int slotIndex = algorithm.getSlot();
 
             fit = true;
-            int start = 0;
+
+            int blockStart = 0;
+            if (address > 0)
+                blockStart = availableBlockSizes[address - 1];
+
+            int start = blockStart;
             if(block.size() > 1)
                 start = block.get(slotIndex - 1).getEnd();
+
             int end = start + p.getMemoryRequirements();
-            MemorySlot usedSlot = new MemorySlot(start, end, 0, availableBlockSizes[address] );
+
+            MemorySlot usedSlot = new MemorySlot(start, end, blockStart, blockStart + availableBlockSizes[address]);
 
             usedSlot.setPid(p.getPCB().getPid());
             usedSlot.setBlockAddress(address);
