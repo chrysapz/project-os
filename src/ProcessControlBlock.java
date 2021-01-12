@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 public class ProcessControlBlock {
-
     private final int pid;
     private ProcessState state;
     // the following two ArrayLists should record when the process starts/stops
@@ -33,7 +32,7 @@ public class ProcessControlBlock {
          * in startTimes/stopTimes */
 
         //-------------------------------------//
-        if (state == ProcessState.RUNNING && this.state != ProcessState.RUNNING)
+        if (state == ProcessState.RUNNING)
             startTimes.add(currentClockTime);
         else if (this.state == ProcessState.RUNNING && state == ProcessState.READY)
             stopTimes.add(currentClockTime + 1);

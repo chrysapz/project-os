@@ -14,17 +14,30 @@ public class FirstFit extends MemoryAllocationAlgorithm {
          * loaded into if the process fits. In case the process doesn't fit, it
          * should return -1. */
         int i = 0;
-        while(!fit || i<availableBlockSizes.length){    //Exit the loop as soon as the process fits in a block
-            if(p.getMemoryRequirements() <= availableBlockSizes[i]){       //If the process fits in a memory block
-                fit=true;              //Update the flag that the process fits
-                address = i;         //Keep the block address where the process fits
-            }
-            i++; //Increment through all available blocks
-        }
-        if(fit)         //If the process fits
-            availableBlockSizes[address] -= p.getMemoryRequirements();        //Subtract the size required for the process from the block it was stored in
+        while(i< memory.size() || !fit)
+        {
+            ArrayList<MemorySlot> block = memory.get(i);
+            if (p.getMemoryRequirements() <= availableBlockSizes[i])       //If the process fits in a memory block
+            {
+                int j = 0;
+                while(j< memory.get(i).size() || !fit) {
+                    if(p.getMemoryRequirements() <= block.get(j).getEnd() - block.get(j).getStart()) {
 
-        return address;        //If the process fits return the address it was stored in, if not return -1
+                        if (!currentlyUsedMemorySlots.contains(block.get(j))) {
+                            if (!fit) {
+                                fit = true;           //Update the flag that the process fits
+                                address = i;        //Keep the block address where the process fits
+                                slot = j;
+                            }
+                        }
+                    }
+                    j++;
+                }
+            }
+            i++;
+        }
+
+        return address;
     }
 
 }

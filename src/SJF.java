@@ -26,9 +26,7 @@ public class SJF extends Scheduler {
          * and change the return value */
         if(processes.size()>0)                  //If at least one process has arrived and is in READY state
         {
-            Process nextProcess=processes.get(0);       //Keep the process which is next in line to be dispatched
-            //processes.remove(0);        //Remove the process from the queue of READY processes
-            return nextProcess;             //Return the process with the shortest burst time
+            return processes.get(0);             //Return the process with the shortest burst time
         }
         return null;            //If no processes have arrived
     }
@@ -55,7 +53,6 @@ public class SJF extends Scheduler {
             temp = processes.get(i+1).getBurstTime();
             processes.get(i+1).setBurstTime(processes.get(high).getBurstTime());
             processes.get(high).setBurstTime(temp);
-
             int index=i+1;
             QuickSort(low, index-1);
             QuickSort(index+1, high);

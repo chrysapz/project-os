@@ -9,6 +9,11 @@ public class MemorySlot {
      * start >= blockStart
      * end <= blockEnd */
 
+    /*/////////////////////////////////////////////////////////////////////////////////////*/
+    private int blockAddress;
+    private int pid;
+    /*/////////////////////////////////////////////////////////////////////////////////////*/
+
     public MemorySlot(int start, int end, int blockStart, int blockEnd) {
         if ((start < blockStart) || (end > blockEnd)) {
             throw new java.lang.RuntimeException("Memory access out of bounds.");
@@ -42,5 +47,27 @@ public class MemorySlot {
     public void setEnd(int end) {
         this.end = end;
     }
+
+
+    /*/////////////////////////////////////////////////////////////////////////////////////*/
+
+    public int getBlockAddress() {
+        return blockAddress;
+    }
+
+    public void setBlockAddress(int blockAddress) {
+        this.blockAddress = blockAddress;
+    }
+
+    public void setPid(int pid) {
+        this.pid = pid;
+    }
+
+    public int getPid() {
+        return pid;
+    }
+
+
+    /*/////////////////////////////////////////////////////////////////////////////////////*/
 
 }
