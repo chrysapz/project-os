@@ -61,7 +61,6 @@ public class Process {
         this.pcb.setState(ProcessState.READY, currentClockTime);
     }
 
-    //https://afteracademy.com/blog/what-is-burst-arrival-exit-response-waiting-turnaround-time-and-throughput
 
     public double getWaitingTime() {
         /* TODO: you need to add some code here

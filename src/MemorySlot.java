@@ -9,10 +9,9 @@ public class MemorySlot {
      * start >= blockStart
      * end <= blockEnd */
 
-    /*/////////////////////////////////////////////////////////////////////////////////////*/
-    private int blockAddress;
-    private int pid;
-    /*/////////////////////////////////////////////////////////////////////////////////////*/
+    private int blockAddress;       //Block address the slot is located
+    private int pid;                //Id of the process stored in the slot
+
 
     public MemorySlot(int start, int end, int blockStart, int blockEnd) {
         if ((start < blockStart) || (end > blockEnd)) {
@@ -49,7 +48,6 @@ public class MemorySlot {
     }
 
 
-    /*/////////////////////////////////////////////////////////////////////////////////////*/
 
     public int getBlockAddress() {
         return blockAddress;
@@ -68,5 +66,4 @@ public class MemorySlot {
     }
 
 
-    /*/////////////////////////////////////////////////////////////////////////////////////*/
 }
