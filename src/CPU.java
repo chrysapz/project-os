@@ -43,6 +43,16 @@ public class CPU {
                         scheduler.addProcess(process);
                         priorityQueue.remove(process);
                     }
+                    else{
+                        int j;
+                        for (j = 0; j < mmu.getAvailableBlockSizes().length; j++)
+                            if (priorityQueue.get(i).getMemoryRequirements() <= mmu.getAvailableBlockSizes()[j])
+                                break;
+                        if (j == mmu.getAvailableBlockSizes().length) {
+                            priorityQueue.remove(i);
+                            terminatedProcesses++;
+                        }
+                    }
                 }
             }
 
@@ -65,7 +75,7 @@ public class CPU {
             //is in state READY
             if (current == null) {
                 current = scheduler.getNextProcess();  //calls getNextProcess if current is null
-                System.out.println("process " + current.getBurstTime() + " starts");
+                //System.out.println("process " + current.getBurstTime() + " starts");
             }
 
             if (current != null) {
