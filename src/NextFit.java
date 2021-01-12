@@ -27,6 +27,7 @@ public class NextFit extends MemoryAllocationAlgorithm {
 
         //if we do a full circle in memory the while() will stop
         while(!(i==lastAddressBlock && flag==lastAddressSlot+1)) {
+
             ArrayList<MemorySlot> block = memory.get(i); //current block for which we are searching if there is place for process p
 
             //if p can fit in the size of the current block
@@ -35,12 +36,9 @@ public class NextFit extends MemoryAllocationAlgorithm {
                 //if it's the first time entering the while() loop
                 // start the search in the current block from the last slot a process was allocated to
                 for (int k = j; k < block.size(); k++) {
-                    //if the process can fit in that slot
-                    if (p.getMemoryRequirements() <= block.get(k).getEnd() - block.get(k).getStart()) {
-                        //and if that slot is not currently used by another process
-                        if (!currentlyUsedMemorySlots.contains(block.get(k))) {
-                            //then put it in that slot
-                            if (!fit)
+                    if (p.getMemoryRequirements() <= block.get(k).getEnd() - block.get(k).getStart()) {    //checking if the process can fit in that slot
+                        if (!currentlyUsedMemorySlots.contains(block.get(k))) {          //checking  if that slot is not currently used by another process
+                            if (!fit)               //allocating process p to the current slot
                                 fit = true;
                             address = i;
                             slot = j;
