@@ -1,11 +1,12 @@
 import java.util.ArrayList;
 
 public class MMU {
+
     private final int[] availableBlockSizes;
     private MemoryAllocationAlgorithm algorithm;
     private ArrayList<MemorySlot> currentlyUsedMemorySlots;
 
-    private ArrayList<ArrayList<MemorySlot>> memory = new ArrayList<ArrayList<MemorySlot>>();
+    private ArrayList<ArrayList<MemorySlot>> memory = new ArrayList<ArrayList<MemorySlot>>();       //Represents the virtual memory with the given available blocks
 
 
     public MMU(int[] availableBlockSizes, MemoryAllocationAlgorithm algorithm) {
@@ -20,12 +21,11 @@ public class MMU {
          * Hint: this should return true if the process was able to fit into memory
          * and false if not */
 
-        /*/////////////////////////////////////////////////////////////////////////////////////*/
 
         if (memory.isEmpty()){                                        //initialize the ArrayList memory, by adding an empty slot for each block
             for (int i = 0; i < availableBlockSizes.length; i++)
             {
-                ArrayList<MemorySlot> slots = new ArrayList<MemorySlot>();
+                ArrayList<MemorySlot> slots = new ArrayList<MemorySlot>();          //Empty slot which represents an initially empty block
                 int blockStart = 0;
                 if(i > 0) blockStart = availableBlockSizes[i - 1];
                 MemorySlot slot = new MemorySlot(blockStart,blockStart + availableBlockSizes[i], blockStart,blockStart + availableBlockSizes[i]);
@@ -36,10 +36,10 @@ public class MMU {
 
         algorithm.setMemory(memory);
 
-        int address = algorithm.fitProcess(p);
-        if(address != -1){
-            ArrayList<MemorySlot> block = memory.get(address);
-            int slotIndex = algorithm.getSlot();
+        int address = algorithm.fitProcess(p);        //Try to allocate space for the process
+        if(address != -1){                            //If the process was allocated
+            ArrayList<MemorySlot> block = memory.get(address);      //Block where the process was allocated
+            int slotIndex = algorithm.getSlot();                    //Slot where the process was allocated
 
             fit = true;
 
@@ -48,23 +48,23 @@ public class MMU {
                 blockStart = availableBlockSizes[address - 1];
 
             int start = blockStart;
-            if(block.size() > 1)
-                start = block.get(slotIndex - 1).getEnd();
+            if(block.size() > 1)            //If there is at least one non-empty slot in the block
+                start = block.get(slotIndex - 1).getEnd();          //Set the slot's start to begin from the end of the previous slot
 
-            int end = start + p.getMemoryRequirements();
+            int end = start + p.getMemoryRequirements();            //Set the end to value of the slot's end plus the memory required for the current process
 
             MemorySlot usedSlot = new MemorySlot(start, end, blockStart, blockStart + availableBlockSizes[address]);
 
-            usedSlot.setPid(p.getPCB().getPid());
-            usedSlot.setBlockAddress(address);
+            usedSlot.setPid(p.getPCB().getPid());       //Set the newly allocated slot's id to the id of the process stored in it
+            usedSlot.setBlockAddress(address);          //Set the newly allocated slot's block address to the address of the block the slot is located in
             block.add(slotIndex,usedSlot);
 
-            currentlyUsedMemorySlots.add(usedSlot);
+            currentlyUsedMemorySlots.add(usedSlot);     //Add the newly allocated slot to the list of the currently used slots
             algorithm.setCurrentlyUsedMemorySlots(currentlyUsedMemorySlots);
             System.out.println("added " + p.getBurstTime() + " in address " + address + " and slot " + algorithm.getSlot());
 
 
-            block.get(slotIndex + 1).setStart(block.get(slotIndex).getEnd());
+            block.get(slotIndex + 1).setStart(block.get(slotIndex).getEnd());       //Set the start of the now empty slot in the block to the end of the previous slot
 
         }
         else System.out.println("process " + p.getBurstTime() + " doesn't fit");
@@ -88,7 +88,6 @@ public class MMU {
         return algorithm;
     }
 
-    /*/////////////////////////////////////////////////////////////////////////////////////*/
-
 }
+
 

@@ -23,6 +23,8 @@ public class Process {
 
     public int getMemoryRequirements() { return memoryRequirements; }
 
+    public void setBurstTime(int bt) { this.burstTime = bt; }
+
     private int arrivalTime;
     private int burstTime;
     private int memoryRequirements;
@@ -36,7 +38,6 @@ public class Process {
         this.burstTime = burstTime;
         this.memoryRequirements = memoryRequirements;
         this.pcb = new ProcessControlBlock();
-
     }
 
     public ProcessControlBlock getPCB() {
@@ -90,3 +91,4 @@ public class Process {
         return (this.burstTime + this.getWaitingTime());
     }
 }
+

@@ -21,10 +21,6 @@ public class RoundRobin extends Scheduler {
 
     //-------------------------------------//
     public int getQuantum(){ return this.quantum;}
-
-    public ArrayList getProcesses(){return this.processes;}                 //to print for debugging, delete later
-
-    public void setProcesses(ArrayList processes){this.processes = processes;}  //to print for debugging, delete later
     //-------------------------------------//
 
     public void addProcess(Process p) {
@@ -42,7 +38,7 @@ public class RoundRobin extends Scheduler {
 
         //-------------------------------------//
         if (processes.isEmpty()) return null;
-        if (noOfProcesses != processes.size()) {        //checks if a process has been remove, so it can return the correct process
+        if (noOfProcesses != processes.size()) {        //checks if a process has been removed, so it can return the correct process
             noOfProcesses = processes.size();           //updates the number of processes
             return processes.get(0);
         }
@@ -52,6 +48,5 @@ public class RoundRobin extends Scheduler {
         return processes.get(0);
         //-------------------------------------//
     }
-
 
 }
