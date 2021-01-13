@@ -48,7 +48,7 @@ public class MMU {
                 blockStart = availableBlockSizes[address - 1];
 
             int start = blockStart;
-            if(block.size() > 1)            //If there is at least one non-empty slot in the block
+            if(slotIndex > 0)            //If the slot isn't the first(or only slot) in the block
                 start = block.get(slotIndex - 1).getEnd();          //Set the slot's start to begin from the end of the previous slot
 
             int end = start + p.getMemoryRequirements();            //Set the end to value of the slot's end plus the memory required for the current process
@@ -61,20 +61,16 @@ public class MMU {
 
             currentlyUsedMemorySlots.add(usedSlot);     //Add the newly allocated slot to the list of the currently used slots
             algorithm.setCurrentlyUsedMemorySlots(currentlyUsedMemorySlots);
-            System.out.println("added " + p.getBurstTime() + " in address " + address + " and slot " + algorithm.getSlot());
-
 
             block.get(slotIndex + 1).setStart(block.get(slotIndex).getEnd());       //Set the start of the now empty slot in the block to the end of the previous slot
 
         }
-        else System.out.println("process " + p.getBurstTime() + " doesn't fit");
         return fit;
     }
 
     public ArrayList<ArrayList<MemorySlot>> getMemory() {
         return memory;
     }
-
 
     public ArrayList<MemorySlot> getCurrentlyUsedMemorySlots() {
         return currentlyUsedMemorySlots;

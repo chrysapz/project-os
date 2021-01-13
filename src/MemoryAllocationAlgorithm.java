@@ -16,8 +16,6 @@ public abstract class MemoryAllocationAlgorithm {
 
     public abstract int fitProcess(Process p);
 
-
-
     public void setMemory(ArrayList<ArrayList<MemorySlot>> memory) {
         this.memory = memory;
     }
@@ -25,7 +23,6 @@ public abstract class MemoryAllocationAlgorithm {
     public int getSlot() {
         return slot;
     }
-
 
     public void setCurrentlyUsedMemorySlots(ArrayList<MemorySlot> currentlyUsedMemorySlots) {
         this.currentlyUsedMemorySlots = currentlyUsedMemorySlots;

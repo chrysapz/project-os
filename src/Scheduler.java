@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public abstract class Scheduler {
 
-
     protected ArrayList<Process> processes; // the list of processes to be executed
 
     public Scheduler() { this.processes = new ArrayList<Process>(); }

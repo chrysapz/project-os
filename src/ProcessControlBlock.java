@@ -18,7 +18,7 @@ public class ProcessControlBlock {
          * Hint: every process should get a unique PID */  //maybe some hashing? some hash key
 
         //creating a hash key with method hashCode and multiplying it with a prime number to add uniqueness
-        this.pid = this.hashCode()*31; // change this line
+        this.pid = this.hashCode()*31;
 
     }
 
@@ -31,13 +31,11 @@ public class ProcessControlBlock {
          * Hint: update this.state, but also include currentClockTime
          * in startTimes/stopTimes */
 
-        //-------------------------------------//
         if (state == ProcessState.RUNNING)
             startTimes.add(currentClockTime);
         else if (this.state == ProcessState.RUNNING && state == ProcessState.READY)
             stopTimes.add(currentClockTime + 1);
         this.state = state;
-        //-------------------------------------//
     }
 
     public int getPid() {

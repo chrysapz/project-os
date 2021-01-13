@@ -25,7 +25,7 @@ public class CPU {
         int lasti=0;                                  //last place of the process that hasn't been added to the array list of processes at the scheduler
         int terminatedProcesses=0;                  //Counts how many processes are in state TERMINATED
         boolean fit;
-        Process current = null;
+        Process current = null;                     //keeps the current process
         Process process;
 
         do{
@@ -41,12 +41,13 @@ public class CPU {
                     }
                     else{
                         int j;
-                        for (j = 0; j < mmu.getAvailableBlockSizes().length; j++)
-                            if (priorityQueue.get(i).getMemoryRequirements() <= mmu.getAvailableBlockSizes()[j])
-                                break;
-                        if (j == mmu.getAvailableBlockSizes().length) {
-                            priorityQueue.remove(i);
-                            terminatedProcesses++;
+                        for (j = 0; j < mmu.getAvailableBlockSizes().length; j++)                                   //Checks all the availableBlockSizes to see if the process in PriorityQueue is able to fit in any of the blocks
+                            if (priorityQueue.get(i).getMemoryRequirements() <= mmu.getAvailableBlockSizes()[j])    //checks if process fits in block
+                                break;                                                                              //breaks so j has value less than the length of availableBlockSizes
+                        if (j == mmu.getAvailableBlockSizes().length) {                                             //if the for loop didn't break means that the process can't fit in any block
+                            priorityQueue.get(i).getPCB().setState(ProcessState.TERMINATED, clock);                 //terminates the process
+                            priorityQueue.remove(i);                                                                //removes it from priority queue
+                            terminatedProcesses++;                                                                  //increments terminatedProcesses
                         }
                     }
                 }
@@ -55,7 +56,6 @@ public class CPU {
             while(lasti < processes.length && processes[lasti].getArrivalTime() == clock)       //Check if any new processes have arrived at the current clock time
             {
                 process = processes[lasti];
-                System.out.println("process " + process.getBurstTime() + " arrives");
                 fit = mmu.loadProcessIntoRAM(processes[lasti]);             //Try and find enough space to fit the process
                 if (fit) {                                          //If the process fits
                     process.getPCB().setState(ProcessState.READY,clock);        //Set the process' state to READY
@@ -69,7 +69,6 @@ public class CPU {
 
             if (current == null) {              //If there is no process running
                 current = scheduler.getNextProcess();  //signals the scheduler to get the next process
-                //System.out.println("process " + current.getBurstTime() + " starts");
             }
 
             if (current != null) {          //If there is already a process running
@@ -99,7 +98,6 @@ public class CPU {
             }
 
             tick();
-            System.out.println("sec " + clock);
         }while (terminatedProcesses<processes.length);          //Loop while there are
     }
 
@@ -173,12 +171,9 @@ public class CPU {
         }
 
 
-        System.out.println("block " + currentBlockIndex + " has " + mmu.getMemory().get(currentBlockIndex).size() + " slots with size " + (mmu.getMemory().get(currentBlockIndex).get(0).getEnd() - mmu.getMemory().get(currentBlockIndex).get(0).getStart()));
-
         currentSlot.setPid(-1);                                     //changes the pid of the slot that is to be removed
         mmu.getCurrentlyUsedMemorySlots().remove(currentIndex);     //remove slot from currentlyUsedMemorySlot
         mmu.getAlgorithm().setCurrentlyUsedMemorySlots(mmu.getCurrentlyUsedMemorySlots());
-        System.out.println("removed process " + current.getBurstTime() + "'s slot from address " + currentBlockIndex);
     }
 }
 

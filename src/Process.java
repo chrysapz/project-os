@@ -12,26 +12,20 @@ public class Process {
         return burstTime;
     }
 
-    //-------------------------------------//
-
     public void setRunTime(int runTime) {
         this.runTime = runTime;
     }
 
     public int getRunTime(){return this.runTime;}
-    //-------------------------------------//
 
     public int getMemoryRequirements() { return memoryRequirements; }
-
-    public void setBurstTime(int bt) { this.burstTime = bt; }
 
     private int arrivalTime;
     private int burstTime;
     private int memoryRequirements;
 
-    //-------------------------------------//
-    private int runTime;                        //keeps tack of how long the process has run
-    //-------------------------------------//
+    private int runTime;                        //keeps track of how long the process has run
+
 
     public Process(int arrivalTime, int burstTime, int memoryRequirements) {
         this.arrivalTime = arrivalTime;
@@ -47,10 +41,9 @@ public class Process {
     public void run(int currentClockTime) {
         /* TODO: you need to add some code here
          * Hint: this should run every time a process starts running */
-        //-------------------------------------//
+
         if (this.getPCB().getStartTimes().isEmpty()) this.runTime = 0;      //initialization of runtime when process runs for the first time
-        //-------------------------------------//
-        this.pcb.setState(ProcessState.RUNNING, currentClockTime);
+        this.pcb.setState(ProcessState.RUNNING, currentClockTime);          //sets the state of the process to RUNNING
     }
 
 
@@ -58,7 +51,7 @@ public class Process {
         /* TODO: you need to add some code here
          * Hint: this should run every time a process stops running */
 
-        this.pcb.setState(ProcessState.READY, currentClockTime);
+        this.pcb.setState(ProcessState.READY, currentClockTime);        //sets the state of the process to READY
     }
 
 
@@ -69,8 +62,8 @@ public class Process {
         ArrayList<Integer> startTimes = this.pcb.getStartTimes();
         ArrayList<Integer> stopTimes = this.pcb.getStopTimes();
         double waiting = 0;
-        if (!startTimes.isEmpty()) waiting += startTimes.get(0) - this.arrivalTime;
-        for (int i = 0; startTimes.size() > (i + 1); i++)
+        if (!startTimes.isEmpty()) waiting += startTimes.get(0) - this.arrivalTime;     //adds the time the process started running for the first time minus its arrival time
+        for (int i = 0; startTimes.size() > (i + 1); i++)                               //for the rest of the startTimes it adds the difference between the times it stopped and started again
             waiting += startTimes.get(i+1) - stopTimes.get(i);
         return waiting;
     }

@@ -1,8 +1,5 @@
 public class PC {
-    /**
-     * We suppose the processes come in chronological order
-     * @param args
-     */
+
     public static void main(String[] args) {
         /* TODO: You may change this method to perform any tests you like */
         final Process[] processes = {
@@ -20,6 +17,5 @@ public class PC {
         cpu.run();
 
     }
-
 
 }

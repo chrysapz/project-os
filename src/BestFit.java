@@ -15,7 +15,6 @@ public class BestFit extends MemoryAllocationAlgorithm {
          * should return -1. */
 
 
-
         for(int i = 0; i< memory.size(); i++)         //Check every available memory block
         {
             ArrayList<MemorySlot> block = memory.get(i);
