@@ -8,7 +8,7 @@ public class CPU {
     private MMU mmu;
     private Process[] processes;
     private int currentProcess;
-    private ArrayList<Process> priorityQueue = new ArrayList<Process>();
+    private ArrayList<Process> priorityQueue = new ArrayList<Process>();        //Stores processes that could not fit
 
     public CPU(Scheduler scheduler, MMU mmu, Process[] processes) {
         this.scheduler = scheduler;
@@ -21,27 +21,23 @@ public class CPU {
          * Hint: you need to run tick() in a loop, until there is nothing else to do... */
 
 
-        QuickSort(0,processes.length - 1);
-        int lasti=0;  //last place of the process that hasn't been added to the array list of processes at the scheduler
-        int terminatedProcesses=0;  //holds the terminated processes
-
-        /*/////////////////////////////////////////////////////////////////////////////////////*/
+        QuickSort(0,processes.length - 1);      //If the processes given are not sorted, sort them based on arrival time
+        int lasti=0;                                  //last place of the process that hasn't been added to the array list of processes at the scheduler
+        int terminatedProcesses=0;                  //Counts how many processes are in state TERMINATED
         boolean fit;
         Process current = null;
         Process process;
-        /*/////////////////////////////////////////////////////////////////////////////////////*/
 
         do{
 
-            /*/////////////////////////////////////////////////////////////////////////////////////*/
-            if(current == null) {
-                for (int i = 0; i < priorityQueue.size(); i++) {
+            if(current == null) {           //If there is no process running
+                for (int i = 0; i < priorityQueue.size(); i++) {    //Check every process in priorityQueue that was unable to be have memory allocated previously
                     process = priorityQueue.get(i);
-                    fit = mmu.loadProcessIntoRAM(process);
-                    if (fit) {
-                        process.getPCB().setState(ProcessState.READY,clock);
-                        scheduler.addProcess(process);
-                        priorityQueue.remove(process);
+                    fit = mmu.loadProcessIntoRAM(process);          //Try and find enough space to fit the process
+                    if (fit) {                                      //If the process fits
+                        process.getPCB().setState(ProcessState.READY,clock);        //Change it's state to READY
+                        scheduler.addProcess(process);              //Add it to the scheduler
+                        priorityQueue.remove(process);              //Remove it from the queue
                     }
                     else{
                         int j;
@@ -56,45 +52,43 @@ public class CPU {
                 }
             }
 
-            while(lasti < processes.length && processes[lasti].getArrivalTime() == clock)
+            while(lasti < processes.length && processes[lasti].getArrivalTime() == clock)       //Check if any new processes have arrived at the current clock time
             {
                 process = processes[lasti];
                 System.out.println("process " + process.getBurstTime() + " arrives");
-                fit = mmu.loadProcessIntoRAM(processes[lasti]);
-                if (fit) {
-                    process.getPCB().setState(ProcessState.READY,clock);
-                    scheduler.addProcess(process);
+                fit = mmu.loadProcessIntoRAM(processes[lasti]);             //Try and find enough space to fit the process
+                if (fit) {                                          //If the process fits
+                    process.getPCB().setState(ProcessState.READY,clock);        //Set the process' state to READY
+                    scheduler.addProcess(process);                  //Add it to the scheduler
                 }
-                else {
-                    priorityQueue.add(process);
+                else {                          //If there isn't enough space for the process
+                    priorityQueue.add(process);        //Add it to the queue of processes waiting to be allocated
                 }
                 lasti++;
             }
-            /*/////////////////////////////////////////////////////////////////////////////////////*/
 
-            //is in state READY
-            if (current == null) {
-                current = scheduler.getNextProcess();  //calls getNextProcess if current is null
+            if (current == null) {              //If there is no process running
+                current = scheduler.getNextProcess();  //signals the scheduler to get the next process
                 //System.out.println("process " + current.getBurstTime() + " starts");
             }
 
-            if (current != null) {
-                if (current.getPCB().getState() != ProcessState.RUNNING)
+            if (current != null) {          //If there is already a process running
+                if (current.getPCB().getState() != ProcessState.RUNNING)        //If the process's hasn't been set to RUNNING
                     current.run(clock);
                 currentProcess = current.getPCB().getPid();
                 current.setRunTime(current.getRunTime() + 1);           //increments the runtime of the process
                 //System.out.println("runtime " + current.getRunTime());
-                if (current.getRunTime() == current.getBurstTime()) {         //is true when runtime of current process has reached its burst time
+                if (current.getRunTime() == current.getBurstTime()) {         //If the runtime of the current process has reached its burst time
                     current.getPCB().setState(ProcessState.TERMINATED, clock); //terminate current process
                     terminatedProcesses++;
 
-                    this.deleteFromMemory(current);
+                    this.deleteFromMemory(current);        //Free the process' allocated memory
 
-                    scheduler.removeProcess(current);
+                    scheduler.removeProcess(current);      //Remove the process from the processes to be scheduled
 
-                    current = null;                                                 //make the current process null
+                    current = null;                        //make the current process null
                 }
-                else if (scheduler instanceof RoundRobin) {
+                else if (scheduler instanceof RoundRobin) {         //If RoundRobin is being used
                     ArrayList<Integer> startTimes = current.getPCB().getStartTimes();   //gets startTimes from PCB
                     if (clock == startTimes.get(startTimes.size() - 1) + ((RoundRobin) scheduler).getQuantum()  - 1) {  //is true if quantum ticks have passed since the last start time of the current process
                         current.waitInBackround(clock);
@@ -106,7 +100,7 @@ public class CPU {
 
             tick();
             System.out.println("sec " + clock);
-        }while (terminatedProcesses<processes.length);
+        }while (terminatedProcesses<processes.length);          //Loop while there are
     }
 
 
@@ -186,5 +180,5 @@ public class CPU {
         mmu.getAlgorithm().setCurrentlyUsedMemorySlots(mmu.getCurrentlyUsedMemorySlots());
         System.out.println("removed process " + current.getBurstTime() + "'s slot from address " + currentBlockIndex);
     }
-
 }
+
