@@ -29,8 +29,7 @@ public class FirstFit extends MemoryAllocationAlgorithm {
                     {
                         if(!currentlyUsedMemorySlots.contains(block.get(j)))   //checking if that slot is currently used by another process
                         {
-                            if(!fit)                       //allocating the process p to the current slot
-                                fit=true;
+                            fit=true;
                             address=i;
                             slot=j;
                             break;   //if the process fitted in a slot stop searching other slots

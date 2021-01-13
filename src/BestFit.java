@@ -31,7 +31,7 @@ public class BestFit extends MemoryAllocationAlgorithm {
                                 slot = j;           //and the slot address where where the process fits
 
                                 //Check if there is a slot larger than the one the process was allocated to up to this point
-                            } else if (block.get(j).getEnd() - block.get(j).getStart() > memory.get(address).get(slot).getEnd() - memory.get(address).get(slot).getStart()) {   //Find the block with the largest available size
+                            } else if (block.get(j).getEnd() - block.get(j).getStart() < memory.get(address).get(slot).getEnd() - memory.get(address).get(slot).getStart()) {   //Find the block with the largest available size
                                 address = i;
                                 slot = j;
                             }

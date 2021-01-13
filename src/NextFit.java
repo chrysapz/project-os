@@ -38,8 +38,7 @@ public class NextFit extends MemoryAllocationAlgorithm {
                 for (int k = j; k < block.size(); k++) {
                     if (p.getMemoryRequirements() <= block.get(k).getEnd() - block.get(k).getStart()) {    //checking if the process can fit in that slot
                         if (!currentlyUsedMemorySlots.contains(block.get(k))) {          //checking  if that slot is not currently used by another process
-                            if (!fit)               //allocating process p to the current slot
-                                fit = true;
+                            fit = true;
                             address = i;
                             slot = j;
                             lastAddressBlock = address;
