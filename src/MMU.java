@@ -6,7 +6,7 @@ public class MMU {
     private MemoryAllocationAlgorithm algorithm;
     private ArrayList<MemorySlot> currentlyUsedMemorySlots;
 
-    private ArrayList<ArrayList<MemorySlot>> memory = new ArrayList<ArrayList<MemorySlot>>();       //Represents the virtual memory with the given available blocks
+    private static ArrayList<ArrayList<MemorySlot>> memory = new ArrayList<ArrayList<MemorySlot>>();       //Represents the virtual memory with the given available blocks
 
 
     public MMU(int[] availableBlockSizes, MemoryAllocationAlgorithm algorithm) {

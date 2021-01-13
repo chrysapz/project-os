@@ -5,7 +5,7 @@ public abstract class MemoryAllocationAlgorithm {
     protected final int[] availableBlockSizes;
     protected ArrayList<MemorySlot> currentlyUsedMemorySlots;
 
-    protected ArrayList<ArrayList<MemorySlot>> memory = new ArrayList<ArrayList<MemorySlot>>();     //Represents the virtual memory with the given available blocks
+    protected static ArrayList<ArrayList<MemorySlot>> memory = new ArrayList<ArrayList<MemorySlot>>();     //Represents the virtual memory with the given available blocks
     protected int slot;         //Stores the slot address where the last process was allocated
 
 
