@@ -31,11 +31,11 @@ public class CPU {
         do{
 
             if(current == null) {           //If there is no process running
-                for (int i = 0; i < priorityQueue.size(); i++) {    //Check every process in priorityQueue that was unable to be have memory allocated previously
+                for (int i = 0; i < priorityQueue.size(); i++) {    //Check every process in priorityQueue that was unable to have memory allocated previously
                     process = priorityQueue.get(i);
                     fit = mmu.loadProcessIntoRAM(process);          //Try and find enough space to fit the process
                     if (fit) {                                      //If the process fits
-                        process.getPCB().setState(ProcessState.READY,clock);        //Change it's state to READY
+                        process.getPCB().setState(ProcessState.READY,clock);        //Change its state to READY
                         scheduler.addProcess(process);              //Add it to the scheduler
                         priorityQueue.remove(process);              //Remove it from the queue
                     }
