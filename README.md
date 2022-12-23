@@ -1,3 +1,3 @@
-# project-os
-badass project
-testing 2
+#Operating System from scratch
+Project for the course Operating Systems offered by AUTH university.
+
